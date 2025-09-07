@@ -1,4 +1,5 @@
 # ✅ Validador de Tarefas do Kauã
+https://projetopessoalvalidadordetarefas.netlify.app/
 
 Um projeto simples e funcional que permite validar, organizar e gerenciar tarefas.  
 Desenvolvido com **HTML, CSS e JavaScript**, focado em interatividade e experiência do usuário.  
