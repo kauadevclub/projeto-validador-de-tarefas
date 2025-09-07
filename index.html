@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de Formulário Profissional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .error-message {
+            transition: all 0.3s ease;
+        }
+        .password-hint {
+            transition: all 0.3s ease;
+        }
+        .valid {
+            color: #10B981;
+        }
+        .invalid {
+            color: #EF4444;
+        }
+        input:focus {
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+        .input-error {
+            border-color: #EF4444;
+        }
+        .input-valid {
+            border-color: #10B981;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up">
+        <div class="bg-blue-600 py-4 px-6">
+            <h1 class="text-2xl font-bold text-white">Validador de Formulário</h1>
+            <p class="text-blue-100">Preencha os campos abaixo</p>
+        </div>
+        
+        <form id="registrationForm" class="p-6 space-y-6">
+            <!-- Nome Completo -->
+            <div>
+                <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Nome Completo*</label>
+                <div class="relative">
+                    <input type="text" id="fullName" name="fullName" 
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                           placeholder="Digite seu nome completo">
+                    <i data-feather="user" class="absolute right-3 top-3 text-gray-400"></i>
+                </div>
+                <p id="fullNameError" class="error-message text-sm text-red-500 mt-1 h-5"></p>
+            </div>
+            
+            <!-- E-mail -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-mail*</label>
+                <div class="relative">
+                    <input type="text" id="email" name="email" 
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                           placeholder="seu@email.com">
+                    <i data-feather="mail" class="absolute right-3 top-3 text-gray-400"></i>
+                </div>
+                <p id="emailError" class="error-message text-sm text-red-500 mt-1 h-5"></p>
+            </div>
+            
+            <!-- Telefone -->
+            <div>
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Telefone (opcional)</label>
+                <div class="relative">
+                    <input type="text" id="phone" name="phone" 
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                           placeholder="(99) 99999-9999" maxlength="15">
+                    <i data-feather="phone" class="absolute right-3 top-3 text-gray-400"></i>
+                </div>
+                <p id="phoneError" class="error-message text-sm text-red-500 mt-1 h-5"></p>
+            </div>
+            
+            <!-- Senha -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Senha*</label>
+                <div class="relative">
+                    <input type="password" id="password" name="password" 
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                           placeholder="Digite sua senha">
+                    <i data-feather="eye-off" id="togglePassword" class="absolute right-3 top-3 text-gray-400 cursor-pointer"></i>
+                </div>
+                <div id="passwordHints" class="mt-2 space-y-1">
+                    <p class="password-hint text-sm flex items-center"><span id="lengthHint" class="invalid">❌</span> Pelo menos 8 caracteres</p>
+                    <p class="password-hint text-sm flex items-center"><span id="upperHint" class="invalid">❌</span> Uma letra maiúscula</p>
+                    <p class="password-hint text-sm flex items-center"><span id="lowerHint" class="invalid">❌</span> Uma letra minúscula</p>
+                    <p class="password-hint text-sm flex items-center"><span id="numberHint" class="invalid">❌</span> Um número</p>
+                    <p class="password-hint text-sm flex items-center"><span id="specialHint" class="invalid">❌</span> Um caractere especial</p>
+                </div>
+                <p id="passwordError" class="error-message text-sm text-red-500 mt-1 h-5"></p>
+            </div>
+            
+            <!-- Confirmação de Senha -->
+            <div>
+                <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirmar Senha*</label>
+                <div class="relative">
+                    <input type="password" id="confirmPassword" name="confirmPassword" 
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                           placeholder="Confirme sua senha">
+                    <i data-feather="lock" class="absolute right-3 top-3 text-gray-400"></i>
+                </div>
+                <p id="confirmPasswordError" class="error-message text-sm text-red-500 mt-1 h-5"></p>
+            </div>
+            
+            <button type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+                Cadastrar
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Inicializa AOS e Feather Icons
+        AOS.init();
+        feather.replace();
+        
+        // Máscara para telefone
+        document.getElementById('phone').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            let formattedValue = '';
+            
+            if (value.length > 0) {
+                formattedValue = '(' + value.substring(0, 2);
+            }
+            if (value.length > 2) {
+                formattedValue += ') ' + value.substring(2, 7);
+            }
+            if (value.length > 7) {
+                formattedValue += '-' + value.substring(7, 11);
+            }
+            
+            e.target.value = formattedValue;
+        });
+        
+        // Toggle para mostrar/ocultar senha
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                feather.replace();
+                icon.setAttribute('data-feather', 'eye');
+            } else {
+                passwordInput.type = 'password';
+                feather.replace();
+                icon.setAttribute('data-feather', 'eye-off');
+            }
+            feather.replace();
+        });
+        
+        // Validação em tempo real para senha
+        document.getElementById('password').addEventListener('input', function(e) {
+            const value = e.target.value;
+            const hints = {
+                length: value.length >= 8,
+                upper: /[A-Z]/.test(value),
+                lower: /[a-z]/.test(value),
+                number: /[0-9]/.test(value),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(value)
+            };
+            
+            // Atualiza os hints
+            document.getElementById('lengthHint').textContent = hints.length ? '✅' : '❌';
+            document.getElementById('lengthHint').className = hints.length ? 'valid' : 'invalid';
+            
+            document.getElementById('upperHint').textContent = hints.upper ? '✅' : '❌';
+            document.getElementById('upperHint').className = hints.upper ? 'valid' : 'invalid';
+            
+            document.getElementById('lowerHint').textContent = hints.lower ? '✅' : '❌';
+            document.getElementById('lowerHint').className = hints.lower ? 'valid' : 'invalid';
+            
+            document.getElementById('numberHint').textContent = hints.number ? '✅' : '❌';
+            document.getElementById('numberHint').className = hints.number ? 'valid' : 'invalid';
+            
+            document.getElementById('specialHint').textContent = hints.special ? '✅' : '❌';
+            document.getElementById('specialHint').className = hints.special ? 'valid' : 'invalid';
+            
+            // Validação básica para mostrar erro
+            validatePassword();
+        });
+        
+        // Validação em tempo real para confirmação de senha
+        document.getElementById('confirmPassword').addEventListener('input', validateConfirmPassword);
+        
+        // Funções de validação
+        function validateFullName() {
+            const fullName = document.getElementById('fullName');
+            const error = document.getElementById('fullNameError');
+            
+            if (fullName.value.trim().length < 3) {
+                fullName.classList.add('input-error');
+                fullName.classList.remove('input-valid');
+                error.textContent = 'Digite um nome válido (mínimo 3 caracteres)';
+                return false;
+            } else {
+                fullName.classList.remove('input-error');
+                fullName.classList.add('input-valid');
+                error.textContent = '';
+                return true;
+            }
+        }
+        
+        function validateEmail() {
+            const email = document.getElementById('email');
+            const error = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(email.value)) {
+                email.classList.add('input-error');
+                email.classList.remove('input-valid');
+                error.textContent = 'Digite um e-mail válido';
+                return false;
+            } else {
+                email.classList.remove('input-error');
+                email.classList.add('input-valid');
+                error.textContent = '';
+                return true;
+            }
+        }
+        
+        function validatePhone() {
+            const phone = document.getElementById('phone');
+            const error = document.getElementById('phoneError');
+            
+            // Telefone é opcional, só valida se preenchido
+            if (phone.value && !/^\(\d{2}\) \d{5}-\d{4}$/.test(phone.value)) {
+                phone.classList.add('input-error');
+                phone.classList.remove('input-valid');
+                error.textContent = 'Digite um telefone válido (ex: (99) 99999-9999)';
+                return false;
+            } else {
+                phone.classList.remove('input-error');
+                phone.classList.add('input-valid');
+                error.textContent = '';
+                return true;
+            }
+        }
+        
+        function validatePassword() {
+            const password = document.getElementById('password');
+            const error = document.getElementById('passwordError');
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+            
+            if (!passwordRegex.test(password.value)) {
+                password.classList.add('input-error');
+                password.classList.remove('input-valid');
+                error.textContent = 'A senha não atende aos requisitos';
+                return false;
+            } else {
+                password.classList.remove('input-error');
+                password.classList.add('input-valid');
+                error.textContent = '';
+                return true;
+            }
+        }
+        
+        function validateConfirmPassword() {
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            const error = document.getElementById('confirmPasswordError');
+            
+            if (confirmPassword.value !== password.value) {
+                confirmPassword.classList.add('input-error');
+                confirmPassword.classList.remove('input-valid');
+                error.textContent = 'As senhas não conferem';
+                return false;
+            } else {
+                confirmPassword.classList.remove('input-error');
+                confirmPassword.classList.add('input-valid');
+                error.textContent = '';
+                return true;
+            }
+        }
+        
+        // Validação do formulário
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const isFullNameValid = validateFullName();
+            const isEmailValid = validateEmail();
+            const isPhoneValid = validatePhone();
+            const isPasswordValid = validatePassword();
+            const isConfirmPasswordValid = validateConfirmPassword();
+            
+            if (isFullNameValid && isEmailValid && isPhoneValid && isPasswordValid && isConfirmPasswordValid) {
+                // Simular envio do formulário
+                alert('Formulário enviado com sucesso!');
+                this.reset();
+                
+                // Resetar estilos
+                document.querySelectorAll('input').forEach(input => {
+                    input.classList.remove('input-valid', 'input-error');
+                });
+                
+                // Resetar hints de senha
+                document.querySelectorAll('.password-hint span').forEach(span => {
+                    span.textContent = '❌';
+                    span.className = 'invalid';
+                });
+            } else {
+                // Rolar até o primeiro erro
+                const firstError = document.querySelector('.input-error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+        
+        // Validação quando sai do campo (blur)
+        document.getElementById('fullName').addEventListener('blur', validateFullName);
+        document.getElementById('email').addEventListener('blur', validateEmail);
+        document.getElementById('phone').addEventListener('blur', validatePhone);
+        document.getElementById('password').addEventListener('blur', validatePassword);
+        document.getElementById('confirmPassword').addEventListener('blur', validateConfirmPassword);
+    </script>
+</body>
+</html>
